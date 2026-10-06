@@ -1,0 +1,40 @@
+# Python virtual environment
+.venv/
+venv/
+
+# Python cache / generated files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+
+# AI agent artifacts
+.agents/
+*.agent/
+agent-logs/
+agent-memory/
+
+# Secrets and Azure credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+azure-credentials.json
+
+# Local environment configuration
+config/sandbox.json
+config/production.json
+tmp.txt
+
+# Local test / output files
+*.csv
+*.log
+tmp.md
+
+# Editor / OS generated files
+.vscode/*
+!.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db

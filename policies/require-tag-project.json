@@ -1,0 +1,107 @@
+{
+  "properties": {
+    "displayName": "Require valid project tag on resource groups and virtual machines",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Audits or denies resource groups and virtual machines whose project tag is missing, empty, or uses invalid comma-separated formatting.",
+    "metadata": {
+      "category": "Tags"
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the policy and choose whether violations are audited or denied."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "excludedRGNames": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Excluded resource group names",
+          "description": "Resource group names excluded from evaluation, including virtual machines in those groups."
+        },
+        "defaultValue": []
+      },
+      "rgNamePatterns": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Resource group name patterns",
+          "description": "Case-sensitive Azure Policy match patterns for resource groups in scope."
+        },
+        "defaultValue": [
+          "R###RG??##"
+        ]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions/resourceGroups",
+              "Microsoft.Compute/virtualMachines"
+            ]
+          },
+          {
+            "value": "[if(equals(field('type'), 'Microsoft.Compute/virtualMachines'), resourceGroup().name, field('name'))]",
+            "notIn": "[parameters('excludedRGNames')]"
+          },
+          {
+            "count": {
+              "value": "[parameters('rgNamePatterns')]",
+              "name": "rgNamePattern",
+              "where": {
+                "value": "[if(equals(field('type'), 'Microsoft.Compute/virtualMachines'), resourceGroup().name, field('name'))]",
+                "match": "[current('rgNamePattern')]"
+              }
+            },
+            "greater": 0
+          },
+          {
+            "anyOf": [
+              {
+                "field": "tags['project']",
+                "exists": "false"
+              },
+              {
+                "field": "tags['project']",
+                "equals": ""
+              },
+              {
+                "field": "tags['project']",
+                "contains": ",,"
+              },
+              {
+                "field": "tags['project']",
+                "like": ",*"
+              },
+              {
+                "field": "tags['project']",
+                "like": "*,"
+              },
+              {
+                "field": "tags['project']",
+                "contains": ", "
+              },
+              {
+                "field": "tags['project']",
+                "contains": " ,"
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}

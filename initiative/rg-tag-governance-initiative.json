@@ -1,0 +1,146 @@
+{
+  "properties": {
+    "displayName": "RG and VM Tag Governance Initiative",
+    "policyType": "Custom",
+    "description": "Audit resource groups and virtual machines against configurable owner, department, environment, project, and resource group naming standards.",
+    "metadata": {
+      "category": "Tags"
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the initiative and choose whether violations are audited or denied."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "excludedRGNames": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Excluded resource group names",
+          "description": "Resource group names excluded from evaluation, including virtual machines in those groups."
+        },
+        "defaultValue": []
+      },
+      "allowedDepartmentValues": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Allowed department values",
+          "description": "Department values accepted by the initiative."
+        },
+        "defaultValue": [
+          "Engineering",
+          "Operations"
+        ]
+      },
+      "allowedEnvironmentValues": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Allowed environment values",
+          "description": "Environment values accepted by the initiative."
+        },
+        "defaultValue": [
+          "Production",
+          "Development",
+          "Test",
+          "Sandbox"
+        ]
+      },
+      "ownerDomain": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Owner email domain",
+          "description": "Lowercase email domain accepted in the owner tag."
+        },
+        "defaultValue": "example.com"
+      },
+      "rgNamePatterns": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Resource group name patterns",
+          "description": "Case-sensitive Azure Policy match patterns for resource groups in scope."
+        },
+        "defaultValue": [
+          "R###RG??##"
+        ]
+      }
+    },
+    "policyDefinitions": [
+      {
+        "policyDefinitionReferenceId": "require-tag-owner",
+        "policyDefinitionId": "require-tag-owner",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('effect')]"
+          },
+          "excludedRGNames": {
+            "value": "[parameters('excludedRGNames')]"
+          },
+          "rgNamePatterns": {
+            "value": "[parameters('rgNamePatterns')]"
+          },
+          "ownerDomain": {
+            "value": "[parameters('ownerDomain')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "require-tag-department",
+        "policyDefinitionId": "require-tag-department",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('effect')]"
+          },
+          "excludedRGNames": {
+            "value": "[parameters('excludedRGNames')]"
+          },
+          "allowedDepartmentValues": {
+            "value": "[parameters('allowedDepartmentValues')]"
+          },
+          "rgNamePatterns": {
+            "value": "[parameters('rgNamePatterns')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "require-tag-environment",
+        "policyDefinitionId": "require-tag-environment",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('effect')]"
+          },
+          "excludedRGNames": {
+            "value": "[parameters('excludedRGNames')]"
+          },
+          "allowedEnvironmentValues": {
+            "value": "[parameters('allowedEnvironmentValues')]"
+          },
+          "rgNamePatterns": {
+            "value": "[parameters('rgNamePatterns')]"
+          }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "require-tag-project",
+        "policyDefinitionId": "require-tag-project",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('effect')]"
+          },
+          "excludedRGNames": {
+            "value": "[parameters('excludedRGNames')]"
+          },
+          "rgNamePatterns": {
+            "value": "[parameters('rgNamePatterns')]"
+          }
+        }
+      }
+    ]
+  }
+}

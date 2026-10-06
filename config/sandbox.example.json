@@ -1,0 +1,12 @@
+{
+  "subscription_id": "YOUR-SANDBOX-SUBSCRIPTION-ID",
+  "location": "eastus",
+  "owner_domain": "example.com",
+  "rg_name_patterns": ["R###RG??##"],
+  "allowed_department_values": ["Engineering", "Operations"],
+  "owner_policy_assignment_name": "rg-tag-owner-audit",
+  "department_policy_assignment_name": "rg-tag-department-audit",
+  "environment_policy_assignment_name": "rg-tag-environment-audit",
+  "project_policy_assignment_name": "rg-tag-project-audit",
+  "initiative_assignment_name": "rg-tag-governance-audit"
+}

@@ -1,0 +1,18 @@
+{
+  "subscription_id": "YOUR-PRODUCTION-SUBSCRIPTION-ID",
+  "initiative_assignment_name": "rg-tag-governance-audit",
+  "effect": "Audit",
+  "owner_domain": "example.com",
+  "rg_name_patterns": ["R###RG??##"],
+  "excluded_rg_names": [],
+  "allowed_department_values": [
+    "Engineering",
+    "Operations"
+  ],
+  "allowed_environment_values": [
+    "Production",
+    "Development",
+    "Test",
+    "Sandbox"
+  ]
+}

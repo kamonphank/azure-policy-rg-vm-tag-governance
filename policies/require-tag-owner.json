@@ -1,0 +1,273 @@
+{
+  "properties": {
+    "displayName": "Require valid owner tag on resource groups and virtual machines",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Audits or denies resource groups and virtual machines with missing or malformed owner tags. Every comma-separated owner must have a nonempty local part and exactly one @ followed by the configured lowercase domain.",
+    "metadata": {
+      "category": "Tags"
+    },
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the policy and choose whether violations are audited or denied."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "excludedRGNames": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Excluded resource group names",
+          "description": "Resource group names excluded from evaluation, including virtual machines in those groups."
+        },
+        "defaultValue": []
+      },
+      "rgNamePatterns": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Resource group name patterns",
+          "description": "Case-sensitive Azure Policy match patterns for resource groups in scope."
+        },
+        "defaultValue": [
+          "R###RG??##"
+        ]
+      },
+      "ownerDomain": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Owner email domain",
+          "description": "Lowercase email domain accepted in the owner tag."
+        },
+        "defaultValue": "example.com"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions/resourceGroups",
+              "Microsoft.Compute/virtualMachines"
+            ]
+          },
+          {
+            "value": "[if(equals(field('type'), 'Microsoft.Compute/virtualMachines'), resourceGroup().name, field('name'))]",
+            "notIn": "[parameters('excludedRGNames')]"
+          },
+          {
+            "count": {
+              "value": "[parameters('rgNamePatterns')]",
+              "name": "rgNamePattern",
+              "where": {
+                "value": "[if(equals(field('type'), 'Microsoft.Compute/virtualMachines'), resourceGroup().name, field('name'))]",
+                "match": "[current('rgNamePattern')]"
+              }
+            },
+            "greater": 0
+          },
+          {
+            "anyOf": [
+              {
+                "field": "tags['owner']",
+                "exists": "false"
+              },
+              {
+                "field": "tags['owner']",
+                "equals": ""
+              },
+              {
+                "field": "tags['owner']",
+                "contains": " "
+              },
+              {
+                "field": "tags['owner']",
+                "contains": ",,"
+              },
+              {
+                "field": "tags['owner']",
+                "like": ",*"
+              },
+              {
+                "field": "tags['owner']",
+                "like": "*,"
+              },
+              {
+                "field": "tags['owner']",
+                "notContains": "@"
+              },
+              {
+                "field": "tags['owner']",
+                "contains": "\t"
+              },
+              {
+                "field": "tags['owner']",
+                "contains": "\r"
+              },
+              {
+                "field": "tags['owner']",
+                "contains": "\n"
+              },
+              {
+                "value": "[length(split(string(coalesce(field('tags[owner]'), '')), ','))]",
+                "greater": 100
+              },
+              {
+                "count": {
+                  "value": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    14,
+                    15,
+                    16,
+                    17,
+                    18,
+                    19,
+                    20,
+                    21,
+                    22,
+                    23,
+                    24,
+                    25,
+                    26,
+                    27,
+                    28,
+                    29,
+                    30,
+                    31,
+                    32,
+                    33,
+                    34,
+                    35,
+                    36,
+                    37,
+                    38,
+                    39,
+                    40,
+                    41,
+                    42,
+                    43,
+                    44,
+                    45,
+                    46,
+                    47,
+                    48,
+                    49,
+                    50,
+                    51,
+                    52,
+                    53,
+                    54,
+                    55,
+                    56,
+                    57,
+                    58,
+                    59,
+                    60,
+                    61,
+                    62,
+                    63,
+                    64,
+                    65,
+                    66,
+                    67,
+                    68,
+                    69,
+                    70,
+                    71,
+                    72,
+                    73,
+                    74,
+                    75,
+                    76,
+                    77,
+                    78,
+                    79,
+                    80,
+                    81,
+                    82,
+                    83,
+                    84,
+                    85,
+                    86,
+                    87,
+                    88,
+                    89,
+                    90,
+                    91,
+                    92,
+                    93,
+                    94,
+                    95,
+                    96,
+                    97,
+                    98,
+                    99
+                  ],
+                  "name": "ownerIndex",
+                  "where": {
+                    "allOf": [
+                      {
+                        "value": "[length(split(string(coalesce(field('tags[owner]'), '')), ','))]",
+                        "greater": "[current('ownerIndex')]"
+                      },
+                      {
+                        "anyOf": [
+                          {
+                            "value": "[length(split(if(less(current('ownerIndex'), length(split(string(coalesce(field('tags[owner]'), '')), ','))), split(string(coalesce(field('tags[owner]'), '')), ',')[current('ownerIndex')], ''), '@'))]",
+                            "notEquals": 2
+                          },
+                          {
+                            "value": "[first(split(if(less(current('ownerIndex'), length(split(string(coalesce(field('tags[owner]'), '')), ','))), split(string(coalesce(field('tags[owner]'), '')), ',')[current('ownerIndex')], ''), '@'))]",
+                            "equals": ""
+                          },
+                          {
+                            "not": {
+                              "allOf": [
+                                {
+                                  "match": "[parameters('ownerDomain')]",
+                                  "value": "[last(split(if(less(current('ownerIndex'), length(split(string(coalesce(field('tags[owner]'), '')), ','))), split(string(coalesce(field('tags[owner]'), '')), ',')[current('ownerIndex')], ''), '@'))]"
+                                },
+                                {
+                                  "value": "[last(split(if(less(current('ownerIndex'), length(split(string(coalesce(field('tags[owner]'), '')), ','))), split(string(coalesce(field('tags[owner]'), '')), ',')[current('ownerIndex')], ''), '@'))]",
+                                  "equals": "[parameters('ownerDomain')]"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "greater": 0
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}
