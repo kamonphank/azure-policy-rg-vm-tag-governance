@@ -77,9 +77,13 @@ az policy state trigger-scan --subscription <subscription-id>
 - [คู่มือทดสอบ Sandbox](docs/sandbox-testing.md) — สร้าง VM ตัวอย่าง ตรวจผล และลบ fixture
 - [คู่มือ deploy Production](docs/production-deployment-runbook.md) — ลำดับตรวจและบันทึกผล
 
+## โปรเจกต์ที่เกี่ยวข้อง
+
+- [`azure-tag-governance-monitor`](https://github.com/kamonphank/azure-tag-governance-monitor) — นำผลประเมินของ Policy assignment จาก repo นี้ไปทำ dashboard (Workbook), ติดตามอายุของรายการที่ไม่ผ่าน และส่งอีเมลแจ้งเตือนรายสัปดาห์ ต้อง deploy repo นี้ก่อน
+
 ## สิ่งที่ยังไม่ทำ
 
-- ยังไม่มี automatic remediation, monitoring, notification หรือ ticket workflow
+- ยังไม่มี automatic remediation หรือ ticket workflow ใน repo นี้ (monitoring และ notification อยู่ใน [`azure-tag-governance-monitor`](https://github.com/kamonphank/azure-tag-governance-monitor))
 - ยังไม่ตรวจว่า mailbox ของ `owner` มีอยู่จริง
 - ยังไม่รวม VM scale sets, VM extensions, Arc machines และ resource type อื่น
 - RG ที่ชื่อไม่เข้ากับ `rg_name_patterns` จะไม่ถูกตรวจ tags
