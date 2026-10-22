@@ -89,6 +89,14 @@
                 "equals": ""
               },
               {
+                "field": "tags['environment']",
+                "contains": "\r"
+              },
+              {
+                "field": "tags['environment']",
+                "contains": "\n"
+              },
+              {
                 "count": {
                   "value": "[parameters('allowedEnvironmentValues')]",
                   "name": "allowedEnvironment",

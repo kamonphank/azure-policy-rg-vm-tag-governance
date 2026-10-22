@@ -87,6 +87,14 @@
                 "equals": ""
               },
               {
+                "field": "tags['department']",
+                "contains": "\r"
+              },
+              {
+                "field": "tags['department']",
+                "contains": "\n"
+              },
+              {
                 "count": {
                   "value": "[parameters('allowedDepartmentValues')]",
                   "name": "allowedDepartment",

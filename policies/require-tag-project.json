@@ -77,6 +77,18 @@
               },
               {
                 "field": "tags['project']",
+                "contains": "\t"
+              },
+              {
+                "field": "tags['project']",
+                "contains": "\r"
+              },
+              {
+                "field": "tags['project']",
+                "contains": "\n"
+              },
+              {
+                "field": "tags['project']",
                 "contains": ",,"
               },
               {
