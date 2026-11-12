@@ -21,7 +21,7 @@ Policy ถูก assign ที่ระดับ subscription แต่ตรว
 
 ```powershell
 git clone <repository-url>
-cd azure-policy-rg-tag-governance
+cd azure-policy-rg-vm-tag-governance
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
